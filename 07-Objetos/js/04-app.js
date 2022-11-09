@@ -7,6 +7,7 @@ const producto = {
 // const nombre = producto.nombre;
 // console.log(nombre);
 
+// Destructuring
 const { nombre, precio, disponible } = producto;
 
 console.log(nombre);
