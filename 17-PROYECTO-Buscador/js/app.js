@@ -28,20 +28,21 @@ const datosBusqueda = {
 
 // Eventos
 document.addEventListener('DOMContentLoaded', () => {
-    mostrarAutos(); // Muestra los años al cargar
-
+    mostrarAutos(autos); // Muestra los años al cargar
 
     // Llena las opciones de años
     llenarSelect();
-})
+});
 
 // Event listener para los select de búsqueda
 marca.addEventListener('change', e => {
     datosBusqueda.marca = e.target.value;
+    filtrarAuto();
 })
 
 year.addEventListener('change', e => {
-    datosBusqueda.year = e.target.value;
+    datosBusqueda.year = parseInt(e.target.value);
+    filtrarAuto();
 })
 
 minimo.addEventListener('change', e => {
@@ -67,20 +68,29 @@ color.addEventListener('change', e => {
 })
 
 // Funciones
-function mostrarAutos() {
-    const autoHTML = document.createElement('P');
+function mostrarAutos(autos) {
 
+    limpiarHTML(); // Elimina el HTML previo
+    
     autos.forEach( auto => {
+        const autoHTML = document.createElement('P');
         const { marca, modelo, year, puertas, transmision, precio, color} = auto;
 
         autoHTML.textContent = `
             ${marca} ${modelo} - ${puertas} Puertas - Transmisión ${transmision} - Precio: ${precio} - Color: ${color}
-            
         `;
+
+        // Insertar en el html
+        resultado.appendChild(autoHTML);
     })
 
-    // Insertar en el html
-    resultado.appendChild(autoHTML);
+}
+
+// Limpiar HTML
+function limpiarHTML() {
+    while(resultado.firstChild) {
+        resultado.removeChild(resultado.firstElementChild);
+    }
 }
 
 // Genera los años del select
@@ -92,4 +102,31 @@ function llenarSelect() {
         opcion.textContent = i;
         year.appendChild(opcion); // Agrega las opciones del año al select
     }
+}
+
+// Función que filtra en base a la búsqueda
+// Funcion de alto nivel: llama a otra función
+function filtrarAuto() {
+    const resultado = autos.filter( filtrarMarca ).filter( filtrarYear );
+
+    // console.log(resultado);
+    mostrarAutos(resultado);
+}
+
+function filtrarMarca(auto) {
+    // Aplicamos destructuring JS
+    const { marca } = datosBusqueda;
+    if(marca) {
+        return auto.marca === marca;
+    }
+    return auto;
+}
+
+function filtrarYear(auto) {
+    // Aplicamos destructuring JS
+    const { year } = datosBusqueda;
+    if(year) {
+        return auto.year === year;
+    }
+    return auto;
 }
