@@ -46,23 +46,28 @@ year.addEventListener('change', e => {
 })
 
 minimo.addEventListener('change', e => {
-    datosBusqueda.minimo = e.target.value;
+    datosBusqueda.minimo = parseInt(e.target.value);
+    filtrarAuto();
 })
 
 maximo.addEventListener('change', e => {
-    datosBusqueda.maximo = e.target.value;
+    datosBusqueda.maximo = parseInt(e.target.value);
+    filtrarAuto();
 })
 
 puertas.addEventListener('change', e => {
-    datosBusqueda.puertas = e.target.value;
+    datosBusqueda.puertas = parseInt(e.target.value);
+    filtrarAuto();
 })
 
 transmision.addEventListener('change', e => {
     datosBusqueda.transmision = e.target.value;
+    filtrarAuto();
 })
 
 color.addEventListener('change', e => {
     datosBusqueda.color = e.target.value;
+    filtrarAuto();
 
     console.log(datosBusqueda);
 })
@@ -107,11 +112,25 @@ function llenarSelect() {
 // Función que filtra en base a la búsqueda
 // Funcion de alto nivel: llama a otra función
 function filtrarAuto() {
-    const resultado = autos.filter( filtrarMarca ).filter( filtrarYear );
+    const resultado = autos.filter( filtrarMarca ).filter( filtrarYear ).filter( filtrarMinimo ).filter( filtrarMaximo ).filter( filtrarPuertas ).filter( filtrarTransmision ).filter( filtrarColor );
 
-    // console.log(resultado);
-    mostrarAutos(resultado);
+    if(resultado.length) {
+        mostrarAutos(resultado);
+    } else {
+        noResultado();
+    }
 }
+
+function noResultado() {
+
+    limpiarHTML();
+
+    const noResultado = document.createElement('div');
+    noResultado.classList.add('alerta', 'error');
+    noResultado.textContent = 'No hay resultados, intenta con otros términos de búsqueda';
+    resultado.appendChild(noResultado);
+}
+
 
 function filtrarMarca(auto) {
     // Aplicamos destructuring JS
@@ -127,6 +146,51 @@ function filtrarYear(auto) {
     const { year } = datosBusqueda;
     if(year) {
         return auto.year === year;
+    }
+    return auto;
+}
+
+function filtrarMinimo(auto) {
+    // Aplicamos destructuring JS
+    const { minimo } = datosBusqueda;
+    if(minimo) {
+        return auto.precio >= minimo;
+    }
+    return auto;
+}
+
+function filtrarMaximo(auto) {
+    // Aplicamos destructuring JS
+    const { maximo } = datosBusqueda;
+    if(maximo) {
+        return auto.precio <= maximo;
+    }
+    return auto;
+}
+
+function filtrarPuertas(auto) {
+    // Aplicamos destructuring JS
+    const { puertas } = datosBusqueda;
+    if(puertas) {
+        return auto.puertas === puertas;
+    }
+    return auto;
+}
+
+function filtrarTransmision(auto) {
+    // Aplicamos destructuring JS
+    const { transmision } = datosBusqueda;
+    if(transmision) {
+        return auto.transmision === transmision;
+    }
+    return auto;
+}
+
+function filtrarColor(auto) {
+    // Aplicamos destructuring JS
+    const { color } = datosBusqueda;
+    if(color) {
+        return auto.color === color;
     }
     return auto;
 }
