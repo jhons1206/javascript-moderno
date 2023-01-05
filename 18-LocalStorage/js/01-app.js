@@ -8,6 +8,8 @@ const producto = {
 }
 
 // Objeto
+// JSON.stringify : Convierte un objeto a un string
+
 const productoString = JSON.stringify( producto );
 // console.log(productoString);
 localStorage.setItem('producto', productoString);
