@@ -49,7 +49,12 @@ function cotizarSeguro(e) {
     const year = document.querySelector('#year');
 
     // Leer el tipo de cobertura
-    
+    const tipo = document.querySelector('input[name="tipo"]:checked').value;
 
-    console.log('Cotizando...');
+    if(marca === '' || year === '' || tipo === '') {
+        console.log('No pasó la validación');
+    } else {
+        console.log('Si paso la validación...');
+    }
+
 }
