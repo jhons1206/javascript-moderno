@@ -21,6 +21,16 @@ class Presupuesto {
         this.restante = Number(presupuesto);
         this.gastos = [];
     }
+
+    nuevoGasto(gasto) {
+        this.gastos = [...this.gastos, gasto];
+        this.calcularRestante();
+    }
+
+    calcularRestante() {
+        const gastado = this.gastos.reduce( ( total, gasto ) => total + gasto.cantidad, 0 );
+        this.restante = this.presupuesto - gastado;
+    }
 }
 
 class UI {
@@ -32,7 +42,93 @@ class UI {
         document.querySelector('#total').textContent = presupuesto;
         document.querySelector('#restante').textContent = restante;
     }
+
+    imprimirAlerta(mensaje, tipo) {
+        // Crear el div
+        const divMensaje = document.createElement('div');
+        divMensaje.classList.add('text-center', 'alert');
+
+        if(tipo === 'error') {
+            divMensaje.classList.add('alert-danger');
+        } else {
+            divMensaje.classList.add('alert-success');
+        }
+
+        // Mensaje de error
+        divMensaje.textContent = mensaje;
+
+        // Insertar en el HTML
+        document.querySelector('.primario').insertBefore(divMensaje, formulario);
+
+        // Quitar alerta del HTML
+        setTimeout( () => {
+            divMensaje.remove();
+        }, 3000);
+    }
+
+    agregarGastoListado(gastos) {
+
+        this.limpiarHTML(); // Elimina el HTML previo
+
+        // Iterar sobre los gastos
+        gastos.forEach( gasto => {
+
+            const { cantidad, nombre, id } = gasto;
+
+            // Crear un li
+            const nuevoGasto = document.createElement('li');
+            nuevoGasto.className = 'list-group-item d-flex justify-content-between align-items-center';
+            nuevoGasto.dataset.id = id; // sintaxis ES6
+
+            console.log(nuevoGasto);
+
+            // Agregar el HTML del gasto
+            nuevoGasto.innerHTML = `${nombre} <span class = "badge badge-primary badge-pill"> $ ${cantidad} </span>`;
+
+            // Boton para borrar el gasto
+            const btnBorrar = document.createElement('button');
+            btnBorrar.classList.add('btn', 'btn-danger', 'borrar-gasto');
+            btnBorrar.textContent = 'Borrar X';
+            nuevoGasto.appendChild(btnBorrar);
+
+            // Agregar al HTML
+            gastoListado.appendChild(nuevoGasto);
+        });
+    }
+
+    limpiarHTML() {
+        while( gastoListado.firstChild ) {
+            gastoListado.removeChild(gastoListado.firstChild);
+        }
+    }
+
+    actualizarRestante(restante) {
+        document.querySelector('#restante').textContent = restante;
+    }
+
+    comprobarPresupuesto(presupuestObj) {
+        const { presupuesto, restante } = presupuestObj;
+
+        const restanteDiv = document.querySelector('.restante');
+
+        // Comprobar 25%
+        if( (presupuesto / 4) > restante ) {
+            restanteDiv.classList.remove('alert-success', 'alert-warning');
+            restanteDiv.classList.add('alert-danger');
+        } else if ( (presupuesto / 2) > restante ) {
+            restanteDiv.classList.remove('alert-success');
+            restanteDiv.classList.add('alert-warning');
+        }
+
+        // Si el total es 0 o menor
+        if(restante <= 0) {
+            ui.imprimirAlerta('El presupuesto se ha agotado', 'error');
+
+            formulario.querySelector('button[type="submit"').disabled = true;
+        }
+    }
 }
+
 
 // Instanciar
 const ui = new UI();
@@ -64,12 +160,36 @@ function agregarGasto(e) {
 
     // Leer los datos del formulario
     const nombre = document.querySelector('#gasto').value;
-    const cantidad = document.querySelector('#cantidad').value;
+    const cantidad = Number(document.querySelector('#cantidad').value);
 
     // Validar
     if(nombre === '' || cantidad === '') {
-        console.log('Ambos campos con obligatorios');
+        ui.imprimirAlerta('Ambos campos son obligatorios', 'error');
+        return;
+    } else if( cantidad <= 0 || isNaN(cantidad) ) {
+        ui.imprimirAlerta('Cantidad no válida', 'error');
+        return;
     }
+
+    // Generar un objeto con el gasto (Object Literal Enhancements - ES6)
+    const gasto = { nombre, cantidad, id: Date.now() };
+
+    // Añade un nuevo gasto
+    presupuesto.nuevoGasto(gasto);
+
+    // Mensaje de todo correcto!
+    ui.imprimirAlerta('Gasto agregado correctamente');
+
+    // Imprimir los gastos
+    const { gastos, restante } = presupuesto;
+    ui.agregarGastoListado(gastos);
+
+    ui.actualizarRestante(restante);
+
+    ui.comprobarPresupuesto(presupuesto);
+
+    // Reinicia el formulario
+    formulario.reset();
 
 }
 
