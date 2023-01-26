@@ -152,6 +152,7 @@ class UI {
                 
                 // Añade un botón de editar...
                 const btnEditar = document.createElement('button');
+                const cita = cursor.value;
                 btnEditar.onclick = () => cargarEdicion(cita);
                 
                 btnEditar.classList.add('btn', 'btn-info');
@@ -176,7 +177,7 @@ class UI {
    }
 
    textoHeading(resultado) {
-        console.log(citas);
+    
         if(resultado > 0 ) {
             heading.textContent = 'Administra tus Citas '
         } else {
@@ -213,11 +214,23 @@ function nuevaCita(e) {
         // Estamos editando
         administrarCitas.editarCita( {...citaObj} );
 
-        ui.imprimirAlerta('Guardado Correctamente');
+        // Edita IndexedDB
+        const transaction = DB.transaction( ['citas'], 'readwrite');
+        const objectStore = transaction.objectStore('citas');
 
-        formulario.querySelector('button[type="submit"]').textContent = 'Crear Cita';
+        objectStore.put(citaObj);
 
-        editando = false;
+        transaction.oncomplete = () => {
+            ui.imprimirAlerta('Guardado Correctamente');
+    
+            formulario.querySelector('button[type="submit"]').textContent = 'Crear Cita';
+    
+            editando = false;
+        }
+
+        transaction.onerror = () => {
+            console.log('Hubo un error');
+        }
 
     } else {
         // Nuevo Registro
@@ -270,9 +283,19 @@ function reiniciarObjeto() {
 
 
 function eliminarCita(id) {
-    administrarCitas.eliminarCita(id);
+    const transaction = DB.transaction(['citas'], 'readwrite');
+    const objectStore = transaction.objectStore('citas');
 
-    ui.imprimirCitas()
+    objectStore.delete(id);
+
+    transaction.oncomplete = () => {
+        console.log(`Cita ${id} eliminada...`);
+        ui.imprimirCitas();
+    }
+
+    transaction.onerror = () => {
+        console.log('Hubo un error');
+    }
 }
 
 function cargarEdicion(cita) {
