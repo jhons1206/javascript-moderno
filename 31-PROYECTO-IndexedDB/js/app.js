@@ -345,7 +345,7 @@ function crearDB() {
         ui.imprimirCitas();
     }
 
-    // Definir el schema
+    // Definir el Schema (Columnas BD)
     crearDB.onupgradeneeded = function(e) {
         const db = e.target.result;
 
