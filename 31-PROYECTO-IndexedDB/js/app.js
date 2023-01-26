@@ -177,7 +177,7 @@ class UI {
    }
 
    textoHeading(resultado) {
-    
+
         if(resultado > 0 ) {
             heading.textContent = 'Administra tus Citas '
         } else {
