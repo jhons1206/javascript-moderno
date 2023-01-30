@@ -1,3 +1,5 @@
+// Como utilizar FETCH API
+
 const cargarTxtBtn = document.querySelector('#cargarTxt');
 cargarTxtBtn.addEventListener('click', obtenerDatos);
 
