@@ -1,19 +1,15 @@
 // API de Clima con Fetch API
 
 // Selectores
-
 const container = document.querySelector('.container');
 const resultado = document.querySelector('#resultado');
 const formulario = document.querySelector('#formulario');
 
 
-
 // Eventos
-
 window.addEventListener('load', () => {
     formulario.addEventListener('submit', buscarClima);
 })
-
 
 
 // Funciones
@@ -70,7 +66,9 @@ function consultarAPI(ciudad, pais) {
     fetch(url)
         .then( respuesta => respuesta.json() )
         .then( datos => {
+
             // console.log(datos);
+
             limpiarHTML(); // Limpiar el HTML previo
 
             if(datos.cod === '404') {
@@ -85,6 +83,7 @@ function consultarAPI(ciudad, pais) {
 
 function mostrarClima(datos) {
     const { name, main: { temp, temp_max, temp_min } } = datos;
+    const { icon } = datos.weather[0];
 
     const centigrados = kelvinACentigrados(temp);
     const max = kelvinACentigrados(temp_max);
@@ -94,9 +93,11 @@ function mostrarClima(datos) {
     nombreCiudad.textContent = `Clima en ${name}`;
     nombreCiudad.classList.add('font-bold', 'text-2xl');
 
-    const actual = document.createElement('p');
-    actual.innerHTML = `${centigrados} &#8451;`;
-    actual.classList.add('font-bold', 'text-6xl');
+    const actual = document.createElement('div');
+    actual.innerHTML = `
+    <img src="http://openweathermap.org/img/wn/${icon}@2x.png"> ${centigrados} &#8451;
+    `;
+    actual.classList.add('font-bold', 'text-6xl', 'clima', 'flex', 'justify-center');
 
     const tempMaxima = document.createElement('p');
     tempMaxima.innerHTML = `Max: ${max} &#8451;`;

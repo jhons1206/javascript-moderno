@@ -62,3 +62,8 @@ html {
     transform: scale(1.0); 
   } 
 }
+
+
+.clima img {
+  display: inline-block;
+}
