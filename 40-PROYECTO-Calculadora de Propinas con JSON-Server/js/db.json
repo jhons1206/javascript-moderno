@@ -71,6 +71,12 @@
             "nombre": "Café Capuchino",
             "precio": 40,
             "categoria": 2
+        },
+        {
+            "id": 13,
+            "nombre": "Lomito Saltado",
+            "precio": 35,
+            "categoria": 1
         }
     ]
 }
