@@ -147,7 +147,7 @@ function agregarPlatillo(producto) {
     // Limpiar el código HTML previo
     limpiarHTML();
 
-    if(cliente.pedido.length) {
+    if (cliente.pedido.length) {
         // Mostrar el Resumen
         actualizarResumen();
     } else {
@@ -231,14 +231,14 @@ function actualizarResumen() {
         subtotalValor.textContent = calcularSubtotal(precio, cantidad);
 
         // Boton para eliminar
-        const btnEliminar = document.createElement('BUTTON')
-        btnEliminar.classList.add('btn', 'btn-danger')
-        btnEliminar.textContent = 'Eliminar del pedido'
+        const btnEliminar = document.createElement('BUTTON');
+        btnEliminar.classList.add('btn', 'btn-danger');
+        btnEliminar.textContent = 'Eliminar del pedido';
 
         // Funcion para eliminar del pedido
-        btnEliminar.onclick = function() {
-            eliminarProducto(id)
-        }
+        btnEliminar.onclick = function () {
+            eliminarProducto(id);
+        };
 
         // Agregar valores a sus contenedores
         cantidadEl.appendChild(cantidadValor);
@@ -250,7 +250,7 @@ function actualizarResumen() {
         lista.appendChild(cantidadEl);
         lista.appendChild(precioEl);
         lista.appendChild(subtotalEl);
-        lista.appendChild(btnEliminar)
+        lista.appendChild(btnEliminar);
 
         // Agregar lista al grupo principal
         grupo.appendChild(lista);
@@ -265,7 +265,7 @@ function actualizarResumen() {
     contenido.appendChild(resumen);
 
     // Mostrar formulario de propinas
-    formularioPropinas()
+    formularioPropinas();
 }
 
 function limpiarHTML() {
@@ -300,19 +300,19 @@ function eliminarProducto(id) {
     }
 
     // El producto se eliminó, por lo tanto regresamos la cantidad a 0 en el formulario
-    const productoEliminado = `#producto-${id}`
-    const inputEliminado = document.querySelector(productoEliminado)
-    inputEliminado.value = 0
+    const productoEliminado = `#producto-${id}`;
+    const inputEliminado = document.querySelector(productoEliminado);
+    inputEliminado.value = 0;
 }
 
-function  mensajePedidoVacio() {
-    const contenido = document.querySelector('#resumen .contenido')
+function mensajePedidoVacio() {
+    const contenido = document.querySelector('#resumen .contenido');
 
-    const texto = document.createElement('P')
-    texto.classList.add('text-center')
+    const texto = document.createElement('P');
+    texto.classList.add('text-center');
     texto.textContent = 'Añade los elementos del pedido';
 
-    contenido.appendChild(texto)
+    contenido.appendChild(texto);
 }
 
 function formularioPropinas() {
@@ -334,7 +334,7 @@ function formularioPropinas() {
     radio10.name = 'propina';
     radio10.value = '10';
     radio10.classList.add('form-check-input');
-    radio10.onclick = calcularPropina
+    radio10.onclick = calcularPropina;
 
     const radio10Label = document.createElement('LABEL');
     radio10Label.textContent = '10%';
@@ -395,30 +395,29 @@ function formularioPropinas() {
 }
 
 function calcularPropina() {
-    
-    const { pedido } = cliente
-    let subtotal = 0
+    const { pedido } = cliente;
+    let subtotal = 0;
 
     // Calcular el subtotal a pagar
-    pedido.forEach( articulo => {
-        subtotal += articulo.cantidad * articulo.precio
-    })
+    pedido.forEach((articulo) => {
+        subtotal += articulo.cantidad * articulo.precio;
+    });
 
     // Seleccionar el radio button con la propina del cliente
-    const propinaSeleccionada = document.querySelector('[name="propina"]:checked').value
+    const propinaSeleccionada = document.querySelector('[name="propina"]:checked').value;
 
     // Calcular la propina
-    const propina = ((subtotal * parseInt(propinaSeleccionada)) / 100)
+    const propina = (subtotal * parseInt(propinaSeleccionada)) / 100;
 
-    console.log(propina)
+    console.log(propina);
 
     // Calcular el total a pagar
-    const total = subtotal + propina
+    const total = subtotal + propina;
 
-    mostrarTotalHTML( subtotal, total, propina )   
+    mostrarTotalHTML(subtotal, total, propina);
 }
 
-function mostrarTotalHTML( subtotal, total, propina ) {
+function mostrarTotalHTML(subtotal, total, propina) {
     const divTotales = document.createElement('DIV');
     divTotales.classList.add('total-pagar', 'my-5');
 
@@ -456,9 +455,9 @@ function mostrarTotalHTML( subtotal, total, propina ) {
     totalParrafo.appendChild(totalSpan);
 
     // Eliminar el último resultado
-    const totalPagarDiv = document.querySelector('.total-pagar')
-    if(totalPagarDiv) {
-        totalPagarDiv.remove()
+    const totalPagarDiv = document.querySelector('.total-pagar');
+    if (totalPagarDiv) {
+        totalPagarDiv.remove();
     }
 
     divTotales.appendChild(subtotalParrafo);
