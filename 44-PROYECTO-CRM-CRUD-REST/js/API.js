@@ -1,0 +1,28 @@
+const url = 'http://localhost:4000/clientes';
+
+// Cuando se crea un nuevo cliente
+export const nuevoCliente = async (cliente) => {
+    try {
+        await fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(cliente), // stringify: convierte nuestro objeto a un string (cadena)
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        window.location.href = 'index.html'
+    } catch (error) {
+        console.log(error)
+    }
+};
+
+// Obtiene todos los clientes
+export const obtenerClientes = async () => {
+    try {
+        const resultado = await fetch(url) // fetch por default envía un GET a la API
+        const clientes = await resultado.json()
+        return clientes
+    } catch (error) {
+        console.log(error)
+    }
+}
