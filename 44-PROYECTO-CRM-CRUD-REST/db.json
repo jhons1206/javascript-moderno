@@ -15,11 +15,18 @@
       "id": 2
     },
     {
-      "nombre": "Dylan",
-      "email": "dylan@gmail.com",
-      "telefono": "964113295",
-      "empresa": "Transportes Dylan",
-      "id": 3
+      "nombre": "George Sandoval",
+      "email": "george.sandoval@hotmail.com",
+      "telefono": "965484545",
+      "empresa": "Videojuegos George",
+      "id": 4
+    },
+    {
+      "nombre": "Dylan Jeremy",
+      "email": "dylan.jeremy@gmail.com",
+      "telefono": "785454212",
+      "empresa": "Transportes Jeremy",
+      "id": 5
     }
   ]
 }
