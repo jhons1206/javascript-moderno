@@ -1,6 +1,6 @@
 // Instalar y activar un Service Worker
 
-const nombreCache = 'apv-v1';
+const nombreCache = 'apv-v6';
 const archivos = [
     './',
     './index.html',
@@ -28,8 +28,18 @@ self.addEventListener('install', e => {
 self.addEventListener('activate', e => {
     console.log('Service Worker Activado');
 
-    console.log(e);
-})
+    e.waitUntil(
+        caches.keys()
+            .then( keys => {
+                // console.log(keys);
+
+                return Promise.all(
+                    keys.filter( key => key !== nombreCache )
+                        .map(key => caches.delete(key)) // Borra versiones anteriores de cache
+                )
+            })
+    )
+});
 
 // Evento fetch para descargar archivos estáticos
 self.addEventListener('fetch', e => {
