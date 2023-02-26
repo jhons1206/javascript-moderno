@@ -1,3 +1,11 @@
+// Medir Performance
+// Snippet: performance.now()
+// Muestra el tiempo que tarda en ejecutarse un bloque de código
+
+// Usar async o defer:
+// async: Descarga el código y lo ejecuta inmediatamente
+// defer: Descarga el código pero ejecuta el código una vez que el HTML este listo (Uso Recomendado).
+
 const criptomonedasSelect = document.querySelector('#criptomonedas');
 const monedaSelect = document.querySelector('#moneda');
 const formulario = document.querySelector('#formulario');
@@ -5,14 +13,14 @@ const resultado = document.querySelector('#resultado');
 
 const objBusqueda = {
     moneda: '',
-    criptomoneda: ''
+    criptomoneda: '',
 };
 
 // Promises
-const obtenerCriptomonedas = criptomonedas => new Promise( resolve => {
-    resolve(criptomonedas);
-});
-
+const obtenerCriptomonedas = (criptomonedas) =>
+    new Promise((resolve) => {
+        resolve(criptomonedas);
+    });
 
 document.addEventListener('DOMContentLoaded', () => {
     consultarCriptomonedas();
@@ -24,32 +32,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Consulta la API par aobtener un listado de Criptomonedas
 function consultarCriptomonedas() {
-
-    // Ir  AtoPLISTS Y Despues market capp 
+    // Ir  AtoPLISTS Y Despues market capp
     const url = 'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD';
 
     fetch(url)
-        .then( respuesta => respuesta.json()) // Consulta exitosa...
-        .then( resultado => obtenerCriptomonedas(resultado.Data)) // 
-        .then( criptomonedas  =>  selectCriptomonedas(criptomonedas) )
-        .catch( error => console.log(error));
+        .then((respuesta) => respuesta.json()) // Consulta exitosa...
+        .then((resultado) => obtenerCriptomonedas(resultado.Data)) //
+        .then((criptomonedas) => selectCriptomonedas(criptomonedas))
+        .catch((error) => console.log(error));
 }
-// llena el select 
-function selectCriptomonedas(criptomonedas) {
 
-    criptomonedas.forEach( cripto => {
-        const { FullName, Name } = cripto.CoinInfo;
+// llena el select
+function selectCriptomonedas(criptomonedas) {
+    // Conocer el tiempo de ejecución
+    // const inicio = performance.now();
+
+    // criptomonedas.forEach((cripto) => {
+    //     const { FullName, Name } = cripto.CoinInfo;
+    //     const option = document.createElement('option');
+    //     option.value = Name;
+    //     option.textContent = FullName;
+    //     // insertar el HTML
+    //     criptomonedasSelect.appendChild(option);
+    // });
+
+    for (let i = 0; i < criptomonedas.length; i++) {
+        const { FullName, Name } = criptomonedas[i].CoinInfo;
         const option = document.createElement('option');
         option.value = Name;
         option.textContent = FullName;
         // insertar el HTML
         criptomonedasSelect.appendChild(option);
-    });
+    }
 
+    // const fin = performance.now();
+
+    // console.log(fin - inicio);
 }
 
-
-function leerValor(e)  {
+function leerValor(e) {
     objBusqueda[e.target.name] = e.target.value;
 }
 
@@ -57,61 +78,61 @@ function submitFormulario(e) {
     e.preventDefault();
 
     // Extraer los valores
-    const { moneda, criptomoneda} = objBusqueda;
+    const { moneda, criptomoneda } = objBusqueda;
 
-    if(moneda === '' || criptomoneda === '') {
+    if (moneda === '' || criptomoneda === '') {
         mostrarAlerta('Ambos campos son obligatorios');
         return;
     }
 
-
     consultarAPI();
 }
 
-
 function mostrarAlerta(mensaje) {
-        // Crea el div
-        const divMensaje = document.createElement('div');
-        divMensaje.classList.add('error');
-        
-        // Mensaje de error
-        divMensaje.textContent = mensaje;
+    // Crea el div
+    const divMensaje = document.createElement('div');
+    divMensaje.classList.add('error');
 
-        // Insertar en el DOM
-       formulario.appendChild(divMensaje);
+    // Mensaje de error
+    divMensaje.textContent = mensaje;
 
-        // Quitar el alert despues de 3 segundos
-        setTimeout( () => {
-            divMensaje.remove();
-        }, 3000);
+    // Insertar en el DOM
+    formulario.appendChild(divMensaje);
+
+    // Quitar el alert despues de 3 segundos
+    setTimeout(() => {
+        divMensaje.remove();
+    }, 3000);
 }
-
 
 function consultarAPI() {
 
-    const { moneda, criptomoneda} = objBusqueda;
+    const inicio = performance.now();
+
+    const { moneda, criptomoneda } = objBusqueda;
 
     const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`;
 
     mostrarSpinner();
 
-    fetch(url)  
-        .then(respuesta => respuesta.json())
-        .then(cotizacion => {
+    fetch(url)
+        .then((respuesta) => respuesta.json())
+        .then((cotizacion) => {
             mostrarCotizacionHTML(cotizacion.DISPLAY[criptomoneda][moneda]);
         });
 
+    const fin = performance.now();
+
+    console.log(fin - inicio);
 }
 
 function mostrarCotizacionHTML(cotizacion) {
-
     limpiarHTML();
 
     console.log(cotizacion);
-    const  { PRICE, HIGHDAY, LOWDAY, CHANGEPCT24HOUR, LASTUPDATE } = cotizacion;
+    const { PRICE, HIGHDAY, LOWDAY, CHANGEPCT24HOUR, LASTUPDATE } = cotizacion;
 
-
-    debugger;
+    // debugger;
 
     const precio = document.createElement('p');
     precio.classList.add('precio');
@@ -129,7 +150,7 @@ function mostrarCotizacionHTML(cotizacion) {
     const ultimaActualizacion = document.createElement('p');
     ultimaActualizacion.innerHTML = `<p>Última Actualización: <span>${LASTUPDATE}</span></p>`;
 
-    debugger;
+    // debugger;
 
     resultado.appendChild(precio);
     resultado.appendChild(precioAlto);
@@ -156,7 +177,7 @@ function mostrarSpinner() {
 }
 
 function limpiarHTML() {
-    while(resultado.firstChild) {
+    while (resultado.firstChild) {
         resultado.removeChild(resultado.firstChild);
     }
-  }
+}
