@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe('LLena los campos para una nueva cita y la edita', () => {
+describe('LLena los campos para una nueva cita y la elimina', () => {
     it('Campos nueva cita', () => {
         cy.visit('/index.html');
 
@@ -26,15 +26,11 @@ describe('LLena los campos para una nueva cita y la edita', () => {
         // Verificar si existe una clase CSS
         cy.get('[data-cy=alerta]').should('have.class', 'alert-success');
 
-        // Edita la cita
-        cy.get('[data-cy="btn-editar"]').click();
+        // Eliminar la cita
+        cy.get('[data-cy="btn-eliminar"]').click();
 
-        cy.get('[data-cy=mascota-input]').clear().type('Cenizo');
+        cy.get('[data-cy=citas-heading]').invoke('text').should('equal', 'No hay Citas, comienza creando una');
 
-        cy.get('[data-cy=submit-cita]').click();
-
-        cy.get('[data-cy=alerta]').invoke('text').should('equal', 'Guardado Correctamente');
-
-        cy.get('[data-cy=alerta]').should('have.class', 'alert-success');
+        cy.screenshot();
     });
 });
